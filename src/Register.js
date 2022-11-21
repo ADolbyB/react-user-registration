@@ -6,7 +6,7 @@ import axios from "./api/axios";
 // Form validation:
 const USER_REGEX = /^[a-zA-Z][a-zA-Z0-9-_]{3,23}$/; // Username conditions
 const PWD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%]).{8,24}$/; // Password Conditions
-const REGISTER_URL = "/register";
+const REGISTER_URL = "/register"; // endpoint for registration in the backend API
 
 const Register = () => {
     const userRef = useRef(); // Set focus on user input when component loads
@@ -33,21 +33,16 @@ const Register = () => {
 
     useEffect(() => {
         setValidName(USER_REGEX.test(user));
-    }, [user])
-
-    useEffect(() => {
-        const result = USER_REGEX.test(user);
-        console.log(result);
         console.log(user);
     }, [user])
 
+
     useEffect(() => {
         const result = PWD_REGEX.test(pwd);
-        console.log(result);
-        console.log(pwd);
+        console.log(result); // Display if the pwd is within acceptible guidelines
+        console.log(pwd); // Display pwd characters in the console
         setValidPwd(result);
-        const match = pwd === matchPwd;
-        setValidMatch(match);
+        setValidMatch(pwd === matchPwd);
     }, [pwd, matchPwd])
 
     useEffect(() => {
@@ -64,9 +59,28 @@ const Register = () => {
             return;
         }
         console.log(user, pwd);
-        setSuccess(true);
+        try {
+            const response = await axios.post(REGISTER_URL, JSON.stringify({ user, pwd }), // Depends on state names and backend names
+            {
+                headers: { "Content-Type": "application/json"},
+                withCredentials: true
+            });
+            console.log(response?.data); // response from server
+            console.log(response?.accessToken); // Log accessToken from backend
+            // console.log(JSON.stringify(response)) // whatever else we want to see
+            setSuccess(true); // Show Success Page
+            // Clear Input Fields Here: Set states back to empty strings
+        } catch (err) {
+            if (!err?.response) {
+                setErrMsg("NO SERVER RESPONSE");
+            } else if (err.response?.status === 409) {
+                setErrMsg("Username Already Exists");
+            } else {
+                setErrMsg("Registration Failed! Contact Tech Support!");
+            }
+            errRef.current.focus(); // Set the focus for screenreaders
+        }
     }
-
 
     return (
         <>
