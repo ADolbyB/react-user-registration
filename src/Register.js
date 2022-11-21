@@ -32,6 +32,10 @@ const Register = () => {
     }, [])
 
     useEffect(() => {
+        setValidName(USER_REGEX.test(user));
+    }, [user])
+
+    useEffect(() => {
         const result = USER_REGEX.test(user);
         console.log(result);
         console.log(user);

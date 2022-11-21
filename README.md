@@ -1,6 +1,6 @@
 # React User Registration
 
-A Playlist of Tutorials for a [React Based](https://www.youtube.com/playlist?list=PL0Zuz27SZ-6PRCpm9clX0WiBEMB70FWwd) Registration Form as part of Project Research.
+A [Playlist of Tutorials](https://www.youtube.com/playlist?list=PL0Zuz27SZ-6PRCpm9clX0WiBEMB70FWwd) for a React Based Registration Form as part of Project Research.
 
 ## Status:
 
