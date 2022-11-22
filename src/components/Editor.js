@@ -4,8 +4,8 @@ const Editor = () => {
     return (
         <section>
             <h1>Editors Page</h1>
-            <br />
-            <p>You must have been assigned an Editor role.</p>
+            <div><br /></div>
+            <p>Welcome to the Editors' Page</p>
             <div className="flexGrow">
                 <Link to="/">Home</Link>
             </div>
@@ -13,4 +13,4 @@ const Editor = () => {
     )
 }
 
-export default Editor
+export default Editor;

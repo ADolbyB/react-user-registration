@@ -4,11 +4,11 @@ const LinkPage = () => {
     return (
         <section>
             <h1>Links</h1>
-            <br />
+            <div><br /></div>
             <h2>Public</h2>
             <Link to="/login">Login</Link>
             <Link to="/register">Register</Link>
-            <br />
+            <div><br /></div>
             <h2>Private</h2>
             <Link to="/">Home</Link>
             <Link to="/editor">Editors Page</Link>
@@ -17,4 +17,4 @@ const LinkPage = () => {
     )
 }
 
-export default LinkPage
+export default LinkPage;

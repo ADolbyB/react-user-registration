@@ -13,4 +13,4 @@ const Lounge = () => {
     )
 }
 
-export default Lounge
+export default Lounge;

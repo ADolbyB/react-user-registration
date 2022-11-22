@@ -1,17 +1,24 @@
-import { useRef, useState, useEffect, useContext } from 'react';
-import AuthContext from "../context/AuthProvider";
+import { useRef, useState, useEffect } from "react";
+import useAuth from "../hooks/useAuth";
+import { link, useNavigate, useLocation } from "react-router-dom"
+
 import axios from "../api/axios";
 const LOGIN_URL = "./auth";
 
 const Login = () => {
-    const { setAuth } = useContext(AuthContext); // Sucessful Authentication will be stored in global context
+    const { setAuth } = useAuth(); // Sucessful Authentication will be stored in global context
+    
+    const navigate = useNavigate();
+    const location = useLocation(); // Find where user came from (which page?)
+    const from = location.state?.from?.pathname || "/";
+    
     const userRef = useRef();
     const errRef = useRef();
 
     const [user, setUser] = useState("");
     const [pwd, setPwd] = useState("");
     const [errMsg, setErrMsg] = useState("");
-    const [success, setSuccess] = useState(false); // Only need for Development
+    //const [success, setSuccess] = useState(false); // Only for Development
 
     useEffect(() => {
         userRef.current.focus();
@@ -40,7 +47,7 @@ const Login = () => {
             setAuth({ user, pwd, roles, accessToken });
             setUser(""); // Clear Input Fields
             setPwd("");
-            setSuccess(true);
+            navigate(from, { replace: true }); // Use React Router to navigate to proper page
         } catch (err) {
             if(!err?.response) {
                 setErrMsg("SERVER NOT RESPONDING");
@@ -56,51 +63,39 @@ const Login = () => {
     }
 
     return (
-        <>
-            {success ? (
-                <section>
-                    <h1>You Are Logged In!</h1>
-                    <br />
-                    <p>
-                        <a href="#">Go To Home Page</a>
-                    </p>
-                </section>
-            ) : (
-                <section>
-                    <p ref={errRef} className={errMsg ? "errmsg" : 
-                    "offscreen"} aria-live="assertive">{errMsg}</p>
-                    <h1>Sign In</h1>
-                    <form onSubmit={handleSubmit}>
-                        <label htmlFor="username">Username: </label>
-                        <input
-                            type="text"
-                            id="username"
-                            ref={userRef}
-                            autoComplete="off"
-                            onChange={(e) => setUser(e.target.value)}
-                            value={user}
-                            required
-                        />
-                        <label htmlFor="password">Password: </label>
-                        <input
-                            type="password"
-                            id="password"
-                            onChange={(e) => setPwd(e.target.value)}
-                            value={pwd}
-                            required
-                        />
-                        <button>Sign In</button>
-                    </form>
-                    <p>
-                        Need an Account?<br />
-                        <span className="line">
-                            { /* Put Router Link Here */ }
-                            <a href="#">Sign Up</a>
-                        </span>
-                    </p>
-                </section>
-            )}
-        </>
+        <section>
+            <p ref={errRef} className={errMsg ? "errmsg" : 
+            "offscreen"} aria-live="assertive">{errMsg}</p>
+            <h1>Sign In</h1>
+            <form onSubmit={handleSubmit}>
+                <label htmlFor="username">Username: </label>
+                <input
+                    type="text"
+                    id="username"
+                    ref={userRef}
+                    autoComplete="off"
+                    onChange={(e) => setUser(e.target.value)}
+                    value={user}
+                    required
+                />
+                <label htmlFor="password">Password: </label>
+                <input
+                    type="password"
+                    id="password"
+                    onChange={(e) => setPwd(e.target.value)}
+                    value={pwd}
+                    required
+                />
+                <button>Sign In</button>
+            </form>
+            <p>
+                Need an Account?<br />
+                <span className="line">
+                    { /* Put Router Link Here */ }
+                    <a href="#">Sign Up</a>
+                </span>
+            </p>
+        </section>
     )
 }
 
