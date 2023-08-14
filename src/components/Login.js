@@ -1,12 +1,12 @@
 import { useRef, useState, useEffect } from "react";
 import useAuth from "../hooks/useAuth";
-import { link, useNavigate, useLocation } from "react-router-dom"
+import { Link, useNavigate, useLocation } from "react-router-dom"
 
 import axios from "../api/axios";
 const LOGIN_URL = "./auth";
 
 const Login = () => {
-    const { setAuth } = useAuth(); // Sucessful Authentication will be stored in global context
+    const { setAuth, persist, setPersist } = useAuth(); // Successful Authentication will be stored in global context
     
     const navigate = useNavigate();
     const location = useLocation(); // Find where user came from (which page?)
@@ -34,7 +34,7 @@ const Login = () => {
         
         try{
             const response = await axios.post(LOGIN_URL, 
-                JSON.stringify({ user, pwd }),
+                JSON.stringify({ user, pwd }), // prints to console after login
                 {
                     headers: {"Content-Type": "application/json"},
                     withCredentials: true
@@ -62,6 +62,14 @@ const Login = () => {
         }
     }
 
+    const togglePersist = () => {
+        setPersist(prev => !prev);
+    }
+
+    useEffect(() => {
+        localStorage.setItem("persist", persist);
+    }, [persist])
+
     return (
         <section>
             <p ref={errRef} className={errMsg ? "errmsg" : 
@@ -87,12 +95,15 @@ const Login = () => {
                     required
                 />
                 <button>Sign In</button>
+                <div className="persistCheck">
+                    <input type="checkbox" id="persist" onChange={togglePersist} checked={persist} />
+                    <label htmlFor="persist">Trust This Device</label>
+                </div>
             </form>
             <p>
                 Need an Account?<br />
                 <span className="line">
-                    { /* Put Router Link Here */ }
-                    <a href="#">Sign Up</a>
+                    <a href="/register">Sign Up</a>
                 </span>
             </p>
         </section>
